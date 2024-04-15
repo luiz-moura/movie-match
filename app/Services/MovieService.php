@@ -12,8 +12,8 @@ class MovieService
             ->setSecret(config('integrations.tmdb.secret'));
     }
 
-    public function getMovies(): array
+    public function getMovies(string $filter): array
     {
-        return $this->httpClientService->get('/3/movie/popular');
+        return $this->httpClientService->get("/3/movie/{$filter}");
     }
 }
