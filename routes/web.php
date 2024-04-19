@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('teste', fn () => true);
+Route::get('room/{key}', [RoomController::class, 'show'])->name('room.show');
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
