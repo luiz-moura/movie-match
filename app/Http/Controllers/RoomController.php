@@ -14,14 +14,18 @@ class RoomController extends Controller
     public function __construct(private RoomRepository $roomRepository) {
     }
 
+    public function create()
+    {
+        return Inertia::render('Room/Create');
+    }
+
     public function store()
     {
-        $room = $this->roomRepository->create(['key' => Str::random(6)]);
-
-        return response()->json([
-            'room_id' => $room->id,
-            'room_key' => $room->key
+        $room = $this->roomRepository->create([
+            'key' => Str::random(5)
         ]);
+
+        return to_route('room.show', $room->key);
     }
 
     public function show(string $key, MovieCacheService $movieCacheService)
@@ -31,8 +35,8 @@ class RoomController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $movies = $movieCacheService->setIdentifier('popular')->value();
+        $movies = $movieCacheService->setIdentifier('popular')->getMovies('popular');
 
-        return Inertia::render('App/Room', compact('room', 'movies'));
+        return Inertia::render('Room/Show', compact('room', 'movies'));
     }
 }

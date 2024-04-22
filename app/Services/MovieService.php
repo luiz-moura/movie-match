@@ -16,4 +16,9 @@ class MovieService
     {
         return $this->httpClientService->get("/3/movie/{$filter}");
     }
+
+    public function findById(int $id): array
+    {
+        return $this->httpClientService->get("/3/movie/{$id}");
+    }
 }

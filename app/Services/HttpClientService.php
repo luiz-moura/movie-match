@@ -15,7 +15,7 @@ class HttpClientService
     private ?string $secret = null;
     private int $timeout = 10;
 
-    private function getClient(): Client
+    private function client(): Client
     {
         if (!isset($this->baseUri)) {
             throw new HttpException('The uri base was not defined.');
@@ -58,8 +58,9 @@ class HttpClientService
     public function get(string $uri): array
     {
         try {
-            $response = $this->getClient()->request('GET', $uri);
+            $response = $this->client()->request('GET', $uri);
         } catch (NetworkExceptionInterface|ClientExceptionInterface|RequestExceptionInterface $e) {
+            var_dump($e->getMessage());
             throw new HttpException(message: 'Failure to integrate with third parties.', previous: $e);
         }
 

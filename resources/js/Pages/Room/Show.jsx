@@ -17,9 +17,10 @@ export default function Room({ movies, room }) {
     }
 
     const swipe = (direction, movieId) => {
-        apiClient.post(`/api/movie/swipe-${direction}`, {
+        apiClient.post(`/api/movie/swipe`, {
+            room_id: room.id,
             movie_id: movieId,
-            room_id: room.id
+            direction
         })
     }
 

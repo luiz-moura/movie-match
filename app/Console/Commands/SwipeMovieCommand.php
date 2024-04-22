@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\SwipeMovie;
+use App\Services\MovieCacheService;
 use Illuminate\Console\Command;
 
 class SwipeMovieCommand extends Command
@@ -11,8 +12,9 @@ class SwipeMovieCommand extends Command
 
     protected $description = 'Swipe movie';
 
-    public function handle()
+    public function handle(MovieCacheService $movieCacheService)
     {
-        SwipeMovie::dispatch();
+        $movie = $movieCacheService->setIdentifier('movie')->findById(693134);
+        SwipeMovie::dispatch($movie);
     }
 }

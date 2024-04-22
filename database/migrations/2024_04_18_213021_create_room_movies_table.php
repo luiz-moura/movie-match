@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('movie_id');
             $table->string('room_id');
             $table->string('direction');
+            $table->boolean('match');
             $table->timestamps();
         });
     }

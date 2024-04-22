@@ -6,6 +6,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::get('room', [RoomController::class, 'create'])->name('room.create');
+Route::post('room', [RoomController::class, 'store'])->name('room.store');
 Route::get('room/{key}', [RoomController::class, 'show'])->name('room.show');
 
 Route::get('/', function () {

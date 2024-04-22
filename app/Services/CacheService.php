@@ -14,12 +14,12 @@ abstract class CacheService
         return $this->key;
     }
 
-    public function value(): mixed
+    protected function value(callable $callback): mixed
     {
         return Cache::remember(
             $this->getKey(),
             $this->ttl,
-            fn () => $this->generate()
+            fn () => $callback()
         );
     }
 
@@ -27,6 +27,4 @@ abstract class CacheService
     {
         return Cache::forget($this->getKey());
     }
-
-    abstract protected function generate(): mixed;
 }

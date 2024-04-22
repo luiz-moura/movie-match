@@ -6,6 +6,7 @@ use App\Events\SwipeMovie;
 use App\Http\Controllers\Controller;
 use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
+use App\Services\MovieCacheService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -14,44 +15,31 @@ class MovieController extends Controller
     public function __construct(
         private RoomRepository $roomRepository,
         private RoomMovieRepository $roomMovieRepository,
+        private MovieCacheService $movieCacheService
     ) {
+        $movieCacheService->setIdentifier('movie');
     }
 
-    public function swipeLeft(Request $request)
+    public function swipe(Request $request)
     {
-        $room = $this->roomRepository->findById($request->get('room_id'));
+        $roomId = $request->get('room_id');
+        $room = $this->roomRepository->findById($roomId);
         if (!$room) {
             throw new NotFoundHttpException();
         }
 
-        $match = $this->roomMovieRepository->existsByMovieId($request->get('movie_id'));
+        $movieId = $request->get('movie_id');
+        $match = $this->roomMovieRepository->existsByMovieId($movieId);
         if ($match) {
-            SwipeMovie::dispatch();
+            $movie = $this->movieCacheService->findById($movieId);
+            SwipeMovie::dispatch($movie);
         }
 
         $this->roomMovieRepository->create([
-            'room_id' => $request->get('room_id'),
-            'movie_id' => $request->get('movie_id'),
-            'direction' => 'left'
-        ]);
-    }
-
-    public function swipeRight(Request $request)
-    {
-        $room = $this->roomRepository->findById($request->get('room_id'));
-        if (!$room) {
-            throw new NotFoundHttpException();
-        }
-
-        $match = $this->roomMovieRepository->existsByMovieId($request->get('movie_id'));
-        if ($match) {
-            SwipeMovie::dispatch();
-        }
-
-        $this->roomMovieRepository->create([
-            'room_id' => $request->get('room_id'),
-            'movie_id' => $request->get('movie_id'),
-            'direction' => 'right'
+            'room_id' => $roomId,
+            'movie_id' => $movieId,
+            'match' => $match,
+            'direction' => $request->get('direction'),
         ]);
     }
 }

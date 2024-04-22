@@ -13,8 +13,10 @@ class MovieCacheService extends CacheService
 
     public function __construct(private readonly MovieService $movieService) {}
 
-    protected function generate(): array
+    public function __call($method, $args)
     {
-        return $this->movieService->getMovies($this->identifier);
+        return $this->value(function () use ($method, $args) {
+            return $this->movieService->$method(...$args);
+        });
     }
 }

@@ -15,5 +15,6 @@ class RoomMovie extends Model
         'room_id',
         'movie_id',
         'direction',
+        'match',
     ];
 }
