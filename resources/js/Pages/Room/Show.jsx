@@ -1,13 +1,13 @@
-import Card from '@/Components/Card';
-import GuestLayout from '@/Layouts/GuestLayout';
-import apiClient from '@/api';
-import { Head } from '@inertiajs/react';
-import { useEffect } from 'react';
+import Card from '@/Components/Card'
+import GuestLayout from '@/Layouts/GuestLayout'
+import apiClient from '@/api'
+import { Head } from '@inertiajs/react'
+import { useEffect } from 'react'
 
 export default function Room({ movies, room }) {
     useEffect(() => {
         window.Echo.channel('swipe').listen('SwipeMovie', (event) => {
-            console.log(event);
+            console.log(event)
         })
     }, [])
 
@@ -28,11 +28,11 @@ export default function Room({ movies, room }) {
 
     return (
         <GuestLayout>
-            <Head title="Forgot Password" />
+            <Head title="Room" />
             <Card movie={movie} />
 
-            <div onClick={() => swipe(directions.left, movie.id)}>👈</div>
-            <div onClick={() => swipe(directions.right, movie.id)}>👉</div>
+            {/* <div onClick={() => swipe(directions.left, movie.id)}>👈</div>
+            <div onClick={() => swipe(directions.right, movie.id)}>👉</div> */}
         </GuestLayout>
     )
 }
