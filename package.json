@@ -25,6 +25,7 @@
         "@inertiajs/react": "^1.0.16",
         "flowbite": "^2.3.0",
         "flowbite-react": "^0.9.0",
+        "framer": "^2.4.1",
         "react-icons": "^5.1.0"
     }
 }
