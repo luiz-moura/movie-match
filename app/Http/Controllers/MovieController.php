@@ -29,16 +29,20 @@ class MovieController extends Controller
         }
 
         $movieId = $request->get('movie_id');
-        $match = $this->roomMovieRepository->existsByMovieId($movieId);
-        if ($match) {
-            $movie = $this->movieCacheService->findById($movieId);
-            SwipeMovie::dispatch($movie);
+        $direction = $request->get('direction');
+
+        if ($direction === 'right') {
+            $match = $this->roomMovieRepository->existsByMovieId($movieId);
+            if ($match) {
+                $movie = $this->movieCacheService->findById($movieId);
+                SwipeMovie::dispatch($movie);
+            }
         }
 
         $this->roomMovieRepository->create([
             'room_id' => $roomId,
             'movie_id' => $movieId,
-            'match' => $match,
+            'match' => $match ?? false,
             'direction' => $request->get('direction'),
         ]);
     }

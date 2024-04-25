@@ -52,6 +52,12 @@ export default function Swipe() {
     const offBoundaryHandle = (direction) => {
         setIsDragOffBoundary(direction)
 
+        apiClient.post('/api/movie/swipe', {
+            direction,
+            movie_id: movies[0].id,
+            room_id: room.id,
+        })
+
         setTimeout(() => setMovies(movies.slice(0, -1)), 5)
     }
 
