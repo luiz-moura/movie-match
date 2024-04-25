@@ -1,11 +1,12 @@
 import ActionButtons from '@/Components/Movies/ActionButtons'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useRoomContext } from '@/Contexts/RoomContext'
+import { useMoviesContext } from '@/Contexts/MoviesContext'
 import Card from './Card'
+import apiClient from '@/api'
 
 export default function Swipe() {
-    const [movies, setMovies] = useRoomContext()
+    const [movies, setMovies] = useMoviesContext()
     const [isDragging, setIsDragging] = useState(false)
     const [isDragOffBoundary, setIsDragOffBoundary] = useState(null)
     const [cardDrivenProps, setCardDrivenProps] = useState({
@@ -48,6 +49,12 @@ export default function Swipe() {
 
     const offBoundaryHandle = (direction) => {
         setIsDragOffBoundary(direction)
+
+        apiClient.post('api/movies/swipe', {
+            direction,
+            movieId: movies[0].id,
+            roomId: movies[0].room_id,
+        })
 
         setTimeout(() => {
             setMovies(movies.slice(0, -1))
