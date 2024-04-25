@@ -49,7 +49,6 @@ const Card = ({
                     className='absolute object-cover object-center duration-500 ease-out w-full'
                 />
             </motion.div>
-
             <motion.div
                 className={`absolute w-full aspect-[100/150] ${!isDragging ? 'hover:cursor-grab' : ''}`}
                 drag='x'

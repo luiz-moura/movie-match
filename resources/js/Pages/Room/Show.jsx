@@ -1,6 +1,7 @@
 
 import Swipe from '@/Components/Movies/Swipe'
 import { MoviesProvider } from '@/Contexts/MoviesContext'
+import { RoomProvider } from '@/Contexts/RoomContext'
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Head } from '@inertiajs/react'
 import { useEffect } from 'react'
@@ -15,9 +16,11 @@ export default function Room({ movies, room }) {
     return (
         <GuestLayout>
             <Head title="Room" />
-            <MoviesProvider initial={movies.results}>
-                <Swipe />
-            </MoviesProvider>
+            <RoomProvider initial={room}>
+                <MoviesProvider initial={movies.results}>
+                    <Swipe />
+                </MoviesProvider>
+            </RoomProvider>
         </GuestLayout>
     )
 }
