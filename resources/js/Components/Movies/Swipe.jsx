@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import apiClient from '@/api'
 import { useMoviesContext } from '@/Contexts/MoviesContext'
 import { useRoomContext } from '@/Contexts/RoomContext'
-import ActionButtons from '@/Components/Movies/ActionButtons'
+import ActionButton from '@/Components/Movies/ActionButton'
 import Card from './Card'
+import Match from './Match'
 
-export default function Swipe() {
+export default function Swipe({ match }) {
     const room = useRoomContext()
     const [movies, setMovies] = useMoviesContext()
 
@@ -54,7 +55,7 @@ export default function Swipe() {
 
         apiClient.post('/api/movie/swipe', {
             direction,
-            movie_id: movies[0].id,
+            movie_id: movies.at(-1).id,
             room_id: room.id,
         })
 
@@ -65,7 +66,9 @@ export default function Swipe() {
         <motion.div className={`flex p-5 flex-col justify-center items-center ${isDragging ? 'cursor-grabbing' : ''}`}>
             <div className='w-full aspect-[100/150] max-w-xs mb-[20px] relative z-10'>
                 <AnimatePresence>
-                    {!!movies && movies.map((movie, i) => {
+                    {match && <Match movie={match} />}
+
+                    {(!match && !!movies) && movies.map((movie, i) => {
                         const isLast = i === movies.length - 1
                         const isUpcoming = i === movies.length - 2
 
@@ -92,20 +95,22 @@ export default function Swipe() {
                 </AnimatePresence>
             </div>
 
-            <div className='flex items-center justify-center w-full gap-4 relative z-10 mt-6'>
-                <ActionButtons
-                    direction={directions.left}
-                    scale={cardDrivenProps.leftButtonScale}
-                    isDragOffBoundary={isDragOffBoundary}
-                    onClick={() => offBoundaryHandle(directions.left)}
-                />
-                <ActionButtons
-                    direction={directions.right}
-                    scale={cardDrivenProps.rightButtonScale}
-                    isDragOffBoundary={isDragOffBoundary}
-                    onClick={() => offBoundaryHandle(directions.right)}
-                />
-            </div>
+            {!match ? (
+                <div className='flex items-center justify-center w-full gap-4 relative z-10 mt-6'>
+                    <ActionButton
+                        direction={directions.left}
+                        scale={cardDrivenProps.leftButtonScale}
+                        isDragOffBoundary={isDragOffBoundary}
+                        onClick={() => offBoundaryHandle(directions.left)}
+                    />
+                    <ActionButton
+                        direction={directions.right}
+                        scale={cardDrivenProps.rightButtonScale}
+                        isDragOffBoundary={isDragOffBoundary}
+                        onClick={() => offBoundaryHandle(directions.right)}
+                    />
+                </div>
+            ) : ''}
         </motion.div>
     )
 }

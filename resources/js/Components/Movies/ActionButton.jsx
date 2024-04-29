@@ -14,7 +14,7 @@ const actionProps = {
     },
 }
 
-export default function ActionButtons({
+export default function ActionButton({
     scale,
     direction,
     isDragOffBoundary,

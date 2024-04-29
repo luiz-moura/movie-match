@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
 use App\Services\MovieCacheService;
+use App\Services\MovieService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -15,9 +16,10 @@ class MovieController extends Controller
     public function __construct(
         private RoomRepository $roomRepository,
         private RoomMovieRepository $roomMovieRepository,
-        private MovieCacheService $movieCacheService
+        // private MovieCacheService $movieCacheService,
+        private MovieService $movieService,
     ) {
-        $movieCacheService->setIdentifier('movie');
+        // $movieCacheService->setIdentifier('movie');
     }
 
     public function swipe(Request $request)
@@ -32,9 +34,10 @@ class MovieController extends Controller
         $direction = $request->get('direction');
 
         if ($direction === 'right') {
-            $match = $this->roomMovieRepository->existsByMovieId($movieId);
+            $match = $this->roomMovieRepository->movieIsAlreadyInRoom($roomId, $movieId);
             if ($match) {
-                $movie = $this->movieCacheService->findById($movieId);
+                // $movie = $this->movieCacheService->findById($movieId);
+                $movie = $this->movieService->findById($movieId);
                 SwipeMovie::dispatch($movie);
             }
         }
