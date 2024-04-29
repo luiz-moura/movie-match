@@ -13,8 +13,11 @@ class RoomMovieRepository extends BaseRepository
         $this->model->create($roomMovie);
     }
 
-    public function movieIsAlreadyInRoom(int $roomId, int $movieId): bool
+    public function checksMachByRoomIdAndMovieId(int $roomId, int $movieId): bool
     {
-        return $this->model->where('room_id', $roomId)->where('movie_id', $movieId)->exists();
+        return $this->model->where('room_id', $roomId)
+            ->where('movie_id', $movieId)
+            ->where('direction', 'right')
+            ->exists();
     }
 }

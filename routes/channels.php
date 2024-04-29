@@ -6,4 +6,4 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('swipe', fn () => true);
+Broadcast::channel('swipe.{roomKey}', fn () => true);

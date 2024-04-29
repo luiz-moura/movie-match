@@ -8,13 +8,17 @@ import { useEffect, useState } from 'react'
 
 export default function Room({ movies, room }) {
     const [match, setMatch] = useState()
+    const channelName = `swipe.${room.key}`
 
     useEffect(() => {
-        window.Echo.channel('swipe').listen('SwipeMovie', (event) => {
-            console.log(event)
-            setMatch(event.movie)
-        })
+        window.Echo.channel(channelName)
+            .listen('SwipeMovie', ({ movie }) => handleMatch(movie))
     }, [])
+
+    const handleMatch = (movie) => {
+        setMatch(movie)
+        window.Echo.leaveChannel(channelName)
+    }
 
     return (
         <GuestLayout>

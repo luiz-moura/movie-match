@@ -34,11 +34,11 @@ class MovieController extends Controller
         $direction = $request->get('direction');
 
         if ($direction === 'right') {
-            $match = $this->roomMovieRepository->movieIsAlreadyInRoom($roomId, $movieId);
+            $match = $this->roomMovieRepository->checksMachByRoomIdAndMovieId($roomId, $movieId);
             if ($match) {
                 // $movie = $this->movieCacheService->findById($movieId);
                 $movie = $this->movieService->findById($movieId);
-                SwipeMovie::dispatch($movie);
+                SwipeMovie::dispatch($movie, $room->key);
             }
         }
 
