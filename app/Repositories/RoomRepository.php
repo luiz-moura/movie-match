@@ -22,4 +22,9 @@ class RoomRepository extends BaseRepository
     {
         return $this->model->find($id);
     }
+
+    public function finishRoomById(int $roomId)
+    {
+        $this->model->find($roomId)->update(['finished_at' => now()]);
+    }
 }

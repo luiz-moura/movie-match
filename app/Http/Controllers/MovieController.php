@@ -39,6 +39,7 @@ class MovieController extends Controller
                 // $movie = $this->movieCacheService->findById($movieId);
                 $movie = $this->movieService->findById($movieId);
                 SwipeMovie::dispatch($movie, $room->key);
+                $this->roomRepository->finishRoomById($room->id);
             }
         }
 
