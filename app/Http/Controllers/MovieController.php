@@ -38,8 +38,8 @@ class MovieController extends Controller
             if ($match) {
                 // $movie = $this->movieCacheService->findById($movieId);
                 $movie = $this->movieService->findById($movieId);
-                SwipeMovie::dispatch($movie, $room->key);
-                $this->roomRepository->finishRoomById($room->id);
+                SwipeMovie::dispatch($movie, $room['key']);
+                $this->roomRepository->finishRoomById($room['id']);
             }
         }
 

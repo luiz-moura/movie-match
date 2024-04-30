@@ -13,9 +13,19 @@ class RoomMovieRepository extends BaseRepository
         $this->model->create($roomMovie);
     }
 
+    public function queryByMatchByRoomId(int $roomId): ?array
+    {
+        return $this->model->query()
+            ->where('room_id', $roomId)
+            ->where('match', true)
+            ->first()
+            ?->toArray();
+    }
+
     public function checksMachByRoomIdAndMovieId(int $roomId, int $movieId): bool
     {
-        return $this->model->where('room_id', $roomId)
+        return $this->model->query()
+            ->where('room_id', $roomId)
             ->where('movie_id', $movieId)
             ->where('direction', 'right')
             ->exists();

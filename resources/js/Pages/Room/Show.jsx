@@ -9,14 +9,35 @@ import { useEffect, useState } from 'react'
 export default function Room({ movies, room }) {
     const [match, setMatch] = useState()
     const channelName = `swipe.${room.key}`
+    const eventToListen = 'SwipeMovie'
+
+    const openTheRoom = () => {
+        if (!!room.finished_at) {
+            setMatch(room.match)
+
+            return
+        }
+
+        listen()
+    }
 
     useEffect(() => {
-        window.Echo.channel(channelName)
-            .listen('SwipeMovie', ({ movie }) => handleMatch(movie))
+        openTheRoom()
     }, [])
+
+    const listen = () => {
+        window.Echo.channel(channelName).listen(
+            eventToListen,
+            ({ movie }) => handleMatch(movie)
+        )
+    }
 
     const handleMatch = (movie) => {
         setMatch(movie)
+        stopListening()
+    }
+
+    const stopListening = () => {
         window.Echo.leaveChannel(channelName)
     }
 

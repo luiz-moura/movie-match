@@ -8,22 +8,25 @@ class RoomRepository extends BaseRepository
 {
     protected $modelClass = Room::class;
 
-    public function create(array $room): Room
+    public function create(array $room): array
     {
-        return $this->model->create($room);
+        return $this->model->create($room)->toArray();
     }
 
-    public function findByKey(string $key): ?Room
+    public function findByKey(string $key): ?array
     {
-        return $this->model->where('key', $key)->first();
+        return $this->model->query()
+            ->where('key', $key)
+            ->first()
+            ?->toArray();
     }
 
-    public function findById(int $id): ?Room
+    public function findById(int $id): ?array
     {
-        return $this->model->find($id);
+        return $this->model->find($id)?->toArray();
     }
 
-    public function finishRoomById(int $roomId)
+    public function finishRoomById(int $roomId): void
     {
         $this->model->find($roomId)->update(['finished_at' => now()]);
     }

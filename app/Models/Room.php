@@ -14,6 +14,7 @@ class Room extends Model
 
     protected $fillable = [
         'key',
+        'finished_at',
     ];
 
     public function movies(): HasMany
