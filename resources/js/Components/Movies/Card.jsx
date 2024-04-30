@@ -72,10 +72,11 @@ const Card = ({
                     setIsDragging(false)
                     setIsDragOffBoundary(null)
 
-                    const isOffBoundary = info.offset.x > offsetBoundary || info.offset.x < -offsetBoundary
-                    const direction = info.offset.x > 0 ? 'right' : 'left'
+                    const offset = info.offset.x
+                    const isOffBoundary = offset > offsetBoundary || offset < -offsetBoundary
 
                     if (isOffBoundary) {
+                        const direction = offset > 0 ? 'right' : 'left'
                         offBoundaryHandle(direction)
                     }
                 }}

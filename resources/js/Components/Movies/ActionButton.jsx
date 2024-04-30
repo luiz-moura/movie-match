@@ -21,6 +21,9 @@ export default function ActionButton({
     onClick,
 }) {
     const Icon = actionProps[direction].icon
+    const textColor = isDragOffBoundary === direction
+        ? ' text-white'
+        : actionProps[direction].iconBaseColorClass
 
     return (
         <motion.button onClick={onClick} whileTap={{ scale: 0.9 }}>
@@ -28,9 +31,7 @@ export default function ActionButton({
                 className={`flex items-center justify-center w-[60px] h-[60px] rounded-full shadow ${actionProps[direction].bgColorClass}`}
                 style={{ scale: scale }}
             >
-                <Icon
-                    className={`w-[24px] h-[24px] duration-100 ease-out ${isDragOffBoundary === direction ? ' text-white' : actionProps[direction].iconBaseColorClass}`}
-                />
+                <Icon className={`w-[24px] h-[24px] duration-100 ease-out ${textColor}`}/>
             </motion.div>
         </motion.button>
     )

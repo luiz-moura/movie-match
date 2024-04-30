@@ -18,10 +18,6 @@ export default function Swipe({ match }) {
         rightButtonScale: 1,
     })
 
-    const directions = {
-        left: 'left',
-        right: 'right'
-    }
     const easeOutExpo = [0.16, 1, 0.3, 1]
     const variants = {
         current: {
@@ -45,8 +41,8 @@ export default function Swipe({ match }) {
             opacity: 0,
             y: 40,
             transition: { duration: 0.3, ease: easeOutExpo },
-            x: isDragOffBoundary === directions.left ? -300 : 300,
-            rotate: isDragOffBoundary === directions.left ? -20 : 20,
+            x: isDragOffBoundary === 'left' ? -300 : 300,
+            rotate: isDragOffBoundary === 'left' ? -20 : 20,
         },
     }
 
@@ -75,7 +71,7 @@ export default function Swipe({ match }) {
                         return (
                             <motion.div
                                 key={movie.id}
-                                className={`relative`}
+                                className={'relative'}
                                 variants={variants}
                                 initial='remainings'
                                 animate={isLast ? 'current' : isUpcoming ? 'upcoming' : 'remainings'}
@@ -98,16 +94,16 @@ export default function Swipe({ match }) {
             {!match ? (
                 <div className='flex items-center justify-center w-full gap-4 relative z-10 mt-6'>
                     <ActionButton
-                        direction={directions.left}
+                        direction={'left'}
                         scale={cardDrivenProps.leftButtonScale}
                         isDragOffBoundary={isDragOffBoundary}
-                        onClick={() => offBoundaryHandle(directions.left)}
+                        onClick={() => offBoundaryHandle('left')}
                     />
                     <ActionButton
-                        direction={directions.right}
+                        direction={'right'}
                         scale={cardDrivenProps.rightButtonScale}
                         isDragOffBoundary={isDragOffBoundary}
-                        onClick={() => offBoundaryHandle(directions.right)}
+                        onClick={() => offBoundaryHandle('right')}
                     />
                 </div>
             ) : ''}
