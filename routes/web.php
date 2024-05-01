@@ -2,31 +2,24 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
-use Illuminate\Foundation\Application;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('room', [RoomController::class, 'create'])->name('room.create');
-Route::post('room', [RoomController::class, 'store'])->name('room.store');
-Route::get('room/{key}', [RoomController::class, 'show'])->name('room.show');
+Route::redirect('/', '/room', Response::HTTP_MOVED_PERMANENTLY);
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+Route::controller(RoomController::class)->prefix('room')->group(function () {
+    Route::get('/', 'create')->name('room.create');
+    Route::post('/', 'store')->name('room.store');
+    Route::get('/{key}', 'show')->name('room.show');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::middleware('auth')
+//     ->controller(ProfileController::class)
+//     ->prefix('profile')
+//     ->group(function () {
+//         Route::get('/', 'edit')->name('profile.edit');
+//         Route::patch('/', 'update')->name('profile.update');
+//         Route::delete('/', 'destroy')->name('profile.destroy');
+//     });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
