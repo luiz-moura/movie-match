@@ -13,7 +13,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RoomController extends Controller
 {
-    public function __construct(private RoomRepository $roomRepository) {
+    public function __construct(private RoomRepository $roomRepository)
+    {
     }
 
     public function create()
@@ -32,27 +33,27 @@ class RoomController extends Controller
 
     public function show(
         string $key,
+        RoomMovieRepository $roomMovieRepository,
         MovieCacheService $movieCacheService,
         MovieService $movieService,
-        RoomMovieRepository $roomMovieRepository,
-    )
-    {
+    ) {
         $room =  $this->roomRepository->findByKey($key);
         if (!$room) {
             throw new NotFoundHttpException();
         }
 
-        $movies = [];
         if (!$room['finished_at']) {
             $movies = $movieCacheService->setIdentifier('popular')->getMovies('popular');
         }
 
-        $room['match'] = [];
         if ($room['finished_at']) {
             $match = $roomMovieRepository->queryByMatchByRoomId($room['id']);
             $room['match'] = $movieService->findById($match['movie_id']);
         }
 
-        return Inertia::render('Room/Show', compact('room', 'movies'));
+        return Inertia::render('Room/Show', [
+            'room' => $room ?? [],
+            'movies' => $movies ?? [],
+        ]);
     }
 }

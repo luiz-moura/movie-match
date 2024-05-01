@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Events\SwipeMovie;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreMovieRequest;
 use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
-use App\Services\MovieCacheService;
 use App\Services\MovieService;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MovieController extends Controller
@@ -16,38 +15,41 @@ class MovieController extends Controller
     public function __construct(
         private RoomRepository $roomRepository,
         private RoomMovieRepository $roomMovieRepository,
-        // private MovieCacheService $movieCacheService,
         private MovieService $movieService,
     ) {
-        // $movieCacheService->setIdentifier('movie');
     }
 
-    public function swipe(Request $request)
+    public function swipe(StoreMovieRequest $request)
     {
-        $roomId = $request->get('room_id');
-        $room = $this->roomRepository->findById($roomId);
+        $validatedRequest = $request->validated();
+
+        $room = $this->roomRepository->findById($validatedRequest['room_id']);
         if (!$room) {
             throw new NotFoundHttpException();
         }
 
-        $movieId = $request->get('movie_id');
-        $direction = $request->get('direction');
+        if ($room['finished_at']) {
+            response()->noContent();
+        }
 
-        if ($direction === 'right') {
-            $match = $this->roomMovieRepository->checksMachByRoomIdAndMovieId($roomId, $movieId);
+        if ('right' === $validatedRequest['direction']) {
+            $match = $this->roomMovieRepository->checksMachByRoomIdAndMovieId($room['id'], $validatedRequest['movie_id']);
             if ($match) {
-                // $movie = $this->movieCacheService->findById($movieId);
-                $movie = $this->movieService->findById($movieId);
+                $movie = $this->movieService->findById($validatedRequest['movie_id']);
                 SwipeMovie::dispatch($movie, $room['key']);
                 $this->roomRepository->finishRoomById($room['id']);
             }
         }
 
         $this->roomMovieRepository->create([
-            'room_id' => $roomId,
-            'movie_id' => $movieId,
+            'room_id' => $room['id'],
+            'movie_id' => $validatedRequest['movie_id'],
+            'direction' => $validatedRequest['direction'],
             'match' => $match ?? false,
-            'direction' => $request->get('direction'),
         ]);
+
+        if ($match) {
+            return response()->noContent();
+        }
     }
 }
