@@ -1,13 +1,13 @@
-
+import { useEffect, useState } from 'react'
+import { Head } from '@inertiajs/react'
+import GuestLayout from '@/Layouts/GuestLayout'
 import Swipe from '@/Components/Movies/Swipe'
 import { MoviesProvider } from '@/Contexts/MoviesContext'
 import { RoomProvider } from '@/Contexts/RoomContext'
-import GuestLayout from '@/Layouts/GuestLayout'
-import { Head } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
 
-export default function Room({ movies, room }) {
+export default function ShowRoom({ movies, room }) {
     const [match, setMatch] = useState()
+
     const channelName = `swipe.${room.key}`
     const eventToListen = 'SwipeMovie'
 
