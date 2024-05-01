@@ -1,4 +1,4 @@
-default: env composer-install up npm-install key-generate
+default: env composer-install up npm-install key-generate storage-link
 	@echo "Your environment is ready to use! Access http://laravel.test and enjoy it!"
 
 SAIL_PATH=@./vendor/bin/sail
@@ -7,7 +7,6 @@ SAIL_PATH=@./vendor/bin/sail
 up:
 	@echo "Starting all docker containers"
 	$(SAIL_PATH) up --force-recreate -d
-	$(SAIL_PATH) art storage:link
 
 .PHONY: down
 down:
@@ -37,6 +36,11 @@ key-generate:
 	@echo "Generating new laravel key"
 	$(SAIL_PATH) art key:generate
 
+.PHONY: storage-link
+storage-link:
+	@echo "Generating storage link"
+	$(SAIL_PATH) art storage:link
+
 .PHONY: reverb
 reverb:
 	@echo "Starting reverb"
@@ -46,3 +50,8 @@ reverb:
 queue:
 	@echo "Starting queue"
 	$(SAIL_PATH) artisan queue:work
+
+.PHONY: npm-dev
+npm-dev:
+	@echo "Running npm dev"
+	$(SAIL_PATH) npm run dev
