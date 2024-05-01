@@ -11,7 +11,7 @@ const Card = ({
     setIsDragging,
     setIsDragOffBoundary,
     setCardDrivenProps,
-    offBoundaryHandle,
+    handleSwipe,
 }) => {
     const offsetBoundary = 150
     const inputX = [offsetBoundary * -1, 0, offsetBoundary]
@@ -46,7 +46,7 @@ const Card = ({
             >
                 <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    className='absolute object-cover object-center duration-500 ease-out w-full'
+                    className='absolute object-cover object-center duration-500 ease-out rounded-lg w-full'
                 />
             </motion.div>
             <motion.div
@@ -61,24 +61,25 @@ const Card = ({
                     const offset = info.offset.x
 
                     if (offset < 0 && offset < offsetBoundary * -1) {
-                        setIsDragOffBoundary(`left`)
+                        setIsDragOffBoundary('left')
                     } else if (offset > 0 && offset > offsetBoundary) {
-                        setIsDragOffBoundary(`right`)
+                        setIsDragOffBoundary('right')
                     } else {
                         setIsDragOffBoundary(null)
                     }
                 }}
                 onDragEnd={(_, info) => {
                     setIsDragging(false)
-                    setIsDragOffBoundary(null)
 
                     const offset = info.offset.x
                     const isOffBoundary = offset > offsetBoundary || offset < -offsetBoundary
 
                     if (isOffBoundary) {
                         const direction = offset > 0 ? 'right' : 'left'
-                        offBoundaryHandle(direction)
+                        handleSwipe(direction)
                     }
+
+                    setIsDragOffBoundary(null)
                 }}
                 style={{ x }}
             />

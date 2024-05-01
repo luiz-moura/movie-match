@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import apiClient from '@/api'
+import ActionButton from '@/Components/Movies/ActionButton'
+import Card from '@/Components/Movies/Card'
+import Match from '@/Components/Movies/Match'
 import { useMoviesContext } from '@/Contexts/MoviesContext'
 import { useRoomContext } from '@/Contexts/RoomContext'
-import ActionButton from '@/Components/Movies/ActionButton'
-import Card from './Card'
-import Match from './Match'
 
 export default function Swipe({ match }) {
     const room = useRoomContext()
@@ -46,16 +46,22 @@ export default function Swipe({ match }) {
         },
     }
 
-    const offBoundaryHandle = (direction) => {
-        setIsDragOffBoundary(direction)
+    const handleSwipe = (direction) => {
+        setMovies(movies.slice(0, -1))
 
         apiClient.post('/api/movie/swipe', {
             direction,
             movie_id: movies.at(-1).id,
             room_id: room.id,
         })
+    }
 
-        setTimeout(() => setMovies(movies.slice(0, -1)), 5)
+    const handleSwipeButton = async (direction) => {
+        setIsDragOffBoundary(direction)
+        setTimeout(() => {
+            handleSwipe(direction)
+            setIsDragOffBoundary(null)
+        }, 5)
     }
 
     return (
@@ -83,7 +89,7 @@ export default function Swipe({ match }) {
                                     setIsDragging={setIsDragging}
                                     setIsDragOffBoundary={setIsDragOffBoundary}
                                     setCardDrivenProps={setCardDrivenProps}
-                                    offBoundaryHandle={offBoundaryHandle}
+                                    handleSwipe={handleSwipe}
                                 />
                             </motion.div>
                         )
@@ -97,13 +103,13 @@ export default function Swipe({ match }) {
                         direction={'left'}
                         scale={cardDrivenProps.leftButtonScale}
                         isDragOffBoundary={isDragOffBoundary}
-                        onClick={() => offBoundaryHandle('left')}
+                        handleSwipe={() => handleSwipeButton('left')}
                     />
                     <ActionButton
                         direction={'right'}
                         scale={cardDrivenProps.rightButtonScale}
                         isDragOffBoundary={isDragOffBoundary}
-                        onClick={() => offBoundaryHandle('right')}
+                        handleSwipe={() => handleSwipeButton('right')}
                     />
                 </div>
             ) : ''}
