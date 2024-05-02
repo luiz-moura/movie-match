@@ -48,7 +48,7 @@ class MovieController extends Controller
             'match' => $match ?? false,
         ]);
 
-        if ($match) {
+        if (isset($match) && $match) {
             return response()->noContent();
         }
     }
