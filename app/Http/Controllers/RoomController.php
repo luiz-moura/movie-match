@@ -28,7 +28,17 @@ class RoomController extends Controller
             'key' => Str::random(5)
         ]);
 
-        return to_route('room.show', $room['key']);
+        return to_route('room.share', $room['key']);
+    }
+
+    public function share(string $key)
+    {
+        $room =  $this->roomRepository->findByKey($key);
+        if (!$room) {
+            throw new NotFoundHttpException();
+        }
+
+        return Inertia::render('Room/Share', compact('room'));
     }
 
     public function show(

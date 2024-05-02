@@ -11,6 +11,7 @@ Route::controller(RoomController::class)->prefix('room')->group(function () {
     Route::get('/', 'create')->name('room.create');
     Route::post('/', 'store')->name('room.store');
     Route::get('/{key}', 'show')->name('room.show');
+    Route::get('/{key}/share', 'share')->name('room.share');
 });
 
 // Route::middleware('auth')
