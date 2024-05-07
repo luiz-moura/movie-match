@@ -18,9 +18,7 @@ export default function CreateRoom() {
     const enterRoom = (e) => {
         e.preventDefault()
 
-        if (!roomKey) {
-            return
-        }
+        if (!roomKey) return
 
         router.replace(`/room/${roomKey}`)
     }

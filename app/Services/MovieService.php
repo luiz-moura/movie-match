@@ -12,9 +12,9 @@ class MovieService
             ->setSecret(config('integrations.tmdb.secret'));
     }
 
-    public function getMovies(string $filter): array
+    public function getMovies(int $page, string $filter): array
     {
-        return $this->httpClientService->get("/3/movie/{$filter}");
+        return $this->httpClientService->get("/3/movie/{$filter}?page={$page}");
     }
 
     public function findById(int $id): array

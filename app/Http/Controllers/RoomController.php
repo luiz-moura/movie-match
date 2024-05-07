@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
-use App\Services\MovieCacheService;
 use App\Services\MovieService;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -24,9 +23,7 @@ class RoomController extends Controller
 
     public function store()
     {
-        $room = $this->roomRepository->create([
-            'key' => Str::random(5)
-        ]);
+        $room = $this->roomRepository->create(['key' => Str::random(5)]);
 
         return to_route('room.share', $room['key']);
     }
@@ -44,7 +41,6 @@ class RoomController extends Controller
     public function show(
         string $key,
         RoomMovieRepository $roomMovieRepository,
-        MovieCacheService $movieCacheService,
         MovieService $movieService,
     ) {
         $room =  $this->roomRepository->findByKey($key);
@@ -52,18 +48,10 @@ class RoomController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!$room['finished_at']) {
-            $movies = $movieCacheService->setIdentifier('popular')->getMovies('popular');
-        }
-
         if ($room['finished_at']) {
-            $match = $roomMovieRepository->queryByMatchByRoomId($room['id']);
-            $room['match'] = $movieService->findById($match['movie_id']);
+            $room['match'] = $roomMovieRepository->queryByMatchByRoomId($room['id']);
         }
 
-        return Inertia::render('Room/Show', [
-            'room' => $room ?? [],
-            'movies' => $movies ?? [],
-        ]);
+        return Inertia::render('Room/Show', compact('room'));
     }
 }

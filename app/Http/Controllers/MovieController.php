@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\SwipeMovie;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\IndexMovieRequest;
 use App\Http\Requests\StoreMovieRequest;
 use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
@@ -17,6 +18,15 @@ class MovieController extends Controller
         private RoomMovieRepository $roomMovieRepository,
         private MovieService $movieService,
     ) {
+    }
+
+    public function index(IndexMovieRequest $request)
+    {
+        $page = $request->validated()['page'];
+
+        $movies = $this->movieService->getMovies($page, 'popular');
+
+        return response()->json($movies);
     }
 
     public function swipe(StoreMovieRequest $request)
