@@ -6,7 +6,7 @@ export default function ShareRoom({ room }) {
     const enterRoom = (e) => {
         e.preventDefault()
 
-        router.replace(`/room/${room.key}`)
+        router.get(`/room/${room.key}`)
     }
 
     const handleCopy = () => {

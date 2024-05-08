@@ -20,7 +20,7 @@ export default function CreateRoom() {
 
         if (!roomKey) return
 
-        router.replace(`/room/${roomKey}`)
+        router.get(`/room/${roomKey}`)
     }
 
     return (
