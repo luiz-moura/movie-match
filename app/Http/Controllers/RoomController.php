@@ -49,7 +49,11 @@ class RoomController extends Controller
         }
 
         if ($room['finished_at']) {
-            $room['match'] = $roomMovieRepository->queryByMatchByRoomId($room['id']);
+            $match = $roomMovieRepository->queryByMatchByRoomId($room['id']);
+
+            if ($match) {
+                $room['match'] = $movieService->findById($match['movie_id']);
+            }
         }
 
         return Inertia::render('Room/Show', compact('room'));
