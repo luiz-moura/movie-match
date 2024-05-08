@@ -10,8 +10,8 @@ const Card = ({
     isDragging,
     setIsDragging,
     setIsDragOffBoundary,
-    setCardDrivenProps,
-    handleSwipe,
+    setDraggedOut,
+    setButtonProps,
 }) => {
     const offsetBoundary = 150
     const inputX = [offsetBoundary * -1, 0, offsetBoundary]
@@ -28,7 +28,7 @@ const Card = ({
     const rightButtonScale = useTransform(x, inputX, [0.3, 1, 3])
 
     useMotionValueEvent(x, 'change', () => {
-        setCardDrivenProps(() => ({
+        setButtonProps(() => ({
             leftButtonScale,
             rightButtonScale
         }))
@@ -51,6 +51,7 @@ const Card = ({
             </motion.div>
             <motion.div
                 className={`absolute w-full aspect-[100/150] ${!isDragging ? 'hover:cursor-grab' : ''}`}
+                style={{ x }}
                 drag='x'
                 dragSnapToOrigin
                 dragElastic={0.06}
@@ -59,7 +60,6 @@ const Card = ({
                 onDragStart={() => setIsDragging(true)}
                 onDrag={(_, info) => {
                     const offset = info.offset.x
-
                     if (offset < 0 && offset < offsetBoundary * -1) {
                         setIsDragOffBoundary('left')
                     } else if (offset > 0 && offset > offsetBoundary) {
@@ -69,19 +69,17 @@ const Card = ({
                     }
                 }}
                 onDragEnd={(_, info) => {
-                    setIsDragging(false)
-
                     const offset = info.offset.x
-                    const isOffBoundary = offset > offsetBoundary || offset < -offsetBoundary
+                    const isOffBoundary = offset > offsetBoundary || offset < offsetBoundary * -1
 
                     if (isOffBoundary) {
                         const direction = offset > 0 ? 'right' : 'left'
-                        handleSwipe(direction)
+                        setDraggedOut(direction)
                     }
 
                     setIsDragOffBoundary(null)
+                    setIsDragging(false)
                 }}
-                style={{ x }}
             />
         </>
     )
