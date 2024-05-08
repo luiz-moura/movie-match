@@ -35,6 +35,12 @@ export default function ShowRoom({ room }) {
         setCurrentPage((previous) => previous + 1)
     }, [movies])
 
+    useEffect(() => {
+        if (!match) return
+
+        clearRoomData()
+    }, [match])
+
     const middleman = async (page) => {
         let movies = await fetchMovies(page)
 
@@ -112,6 +118,10 @@ export default function ShowRoom({ room }) {
             movie_id: movieId,
             room_id: room.id,
         })
+    }
+
+    const clearRoomData = () => {
+        Cookies.remove(cacheRoomId)
     }
 
     return (
