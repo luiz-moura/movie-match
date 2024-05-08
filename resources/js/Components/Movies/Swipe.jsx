@@ -60,7 +60,7 @@ export default function Swipe({ movies, match, handleSwipe }) {
 
     return (
         <motion.div className={`w-full flex p-5 flex-col justify-center items-center ${isDragging ? 'cursor-grabbing' : ''}`}>
-            <div className='w-full aspect-[100/150] max-w-xs mb-[20px] relative z-10'>
+            <div className='w-full aspect-[100/150] max-w-xs relative z-10'>
                 <AnimatePresence>
                     {match && <Match movie={match} />}
 
