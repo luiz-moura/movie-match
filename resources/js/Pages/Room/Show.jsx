@@ -30,17 +30,32 @@ export default function ShowRoom({ room }) {
     }, [currentPage])
 
     useEffect(() => {
-        if (movies?.length !== 0 || movies.length === 20) return
+        if (movies?.length !== 0) return
 
         setCurrentPage((previous) => previous + 1)
     }, [movies])
 
     const middleman = async (page) => {
-        const movies = await fetchMovies(page)
+        let movies = await fetchMovies(page)
+
+        const { page: lastPageLoaded, movieId: lastSwipedMovieId } = getLastSwipedMovie()
+        const isBeingResumed = page === lastPageLoaded
+        if (isBeingResumed) {
+            movies = removeSwipedMovies(movies, lastSwipedMovieId)
+        }
+
         setMovies(movies)
+
+        if (isBeingResumed) return
 
         const movieId = movies.at(-1).id
         saveLastSwipedMovie(movieId, page)
+    }
+
+    const removeSwipedMovies = (movies, lastSwipedMovieId) => {
+        const index = movies.findIndex(movie => movie.id === lastSwipedMovieId)
+
+        return movies.slice(0, index)
     }
 
     const getLastSwipedMovie = () => {
