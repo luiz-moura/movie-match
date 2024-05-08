@@ -46,7 +46,7 @@ class MovieController extends Controller
             $match = $this->roomMovieRepository->checksMachByRoomIdAndMovieId($room['id'], $validatedRequest['movie_id']);
             if ($match) {
                 $movie = $this->movieService->findById($validatedRequest['movie_id']);
-                SwipeMovie::dispatch($movie, $room['key']);
+                SwipeMovie::dispatch($room['key'], $movie);
                 $this->roomRepository->finishRoomById($room['id']);
             }
         }

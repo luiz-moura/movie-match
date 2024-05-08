@@ -13,8 +13,8 @@ class SwipeMovie implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public array $movie = [],
         public string $roomKey,
+        public array $movie = [],
     ) {
     }
 
