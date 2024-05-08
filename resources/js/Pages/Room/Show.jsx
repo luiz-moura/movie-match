@@ -40,20 +40,17 @@ export default function ShowRoom({ room }) {
         setMovies(movies)
 
         const movieId = movies.at(-1).id
-        saveLastSwipedMovie({
-            page,
-            movieId,
-        })
+        saveLastSwipedMovie(movieId, page)
     }
 
     const getLastSwipedMovie = () => {
-        let lastSwiped = Cookies.get(cacheRoomId)
+        const lastSwipedJson = Cookies.get(cacheRoomId)
 
-        if (!lastSwiped) {
+        if (!lastSwipedJson) {
             return { page: 1, movieId: null }
         }
 
-        lastSwiped = JSON.parse(lastSwiped)
+        const lastSwiped = JSON.parse(lastSwipedJson)
 
         return {
             page: lastSwiped.page ?? 1,
@@ -74,7 +71,7 @@ export default function ShowRoom({ room }) {
         return result.status === 200 ? result.data.results : []
     }
 
-    const saveLastSwipedMovie = ({ page, movieId }) => {
+    const saveLastSwipedMovie = (movieId, page) => {
         Cookies.set(cacheRoomId, JSON.stringify({ page, movieId }))
     }
 
@@ -89,18 +86,17 @@ export default function ShowRoom({ room }) {
 
     const handleSwipe = (direction) => {
         const movieId = movies.at(-1).id
+        sendSwipedMovie(movieId, direction)
+        saveLastSwipedMovie(movieId, currentPage)
+        setMovies(movies.slice(0, -1))
+    }
+
+    const sendSwipedMovie = (movieId, direction) => {
         apiClient.post('/api/movie/swipe', {
             direction,
             movie_id: movieId,
             room_id: room.id,
         })
-
-        saveLastSwipedMovie({
-            page: currentPage,
-            movieId,
-        })
-
-        setMovies(movies.slice(0, -1))
     }
 
     return (
