@@ -126,7 +126,7 @@ export default function ShowRoom({ room }) {
 
     return (
         <GuestLayout>
-            <Head title="Room" />
+            <Head title='Room' />
             <Swipe
                 movies={movies}
                 match={match}
