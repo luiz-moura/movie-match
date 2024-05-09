@@ -1,8 +1,12 @@
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Head, router } from '@inertiajs/react'
+import { useRef } from 'react'
 import { FiKey } from 'react-icons/fi'
 
 export default function ShareRoom({ room }) {
+
+    const copyButton = useRef(null)
+
     const enterRoom = (e) => {
         e.preventDefault()
 
@@ -10,7 +14,20 @@ export default function ShareRoom({ room }) {
     }
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(room.key)
+        window.navigator.clipboard.writeText(room.key)
+        changeButtonColor()
+    }
+
+    const changeButtonColor = () => {
+        const button = copyButton.current
+
+        if (!button) return
+
+        button.style.backgroundColor = 'green'
+
+        setTimeout(() => {
+          button.style.backgroundColor = ''
+        }, 100)
     }
 
     return (
@@ -34,14 +51,15 @@ export default function ShareRoom({ room }) {
                     />
                     <button
                         type='button'
+                        ref={copyButton}
                         onClick={handleCopy}
                         className='text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
                     >Copy</button>
                 </div>
 
                 <button
-                    type="submit"
-                    className="px-6 py-3.5 text-base font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full mt-5"
+                    type='submit'
+                    className='px-6 py-3.5 text-base font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full mt-5'
                 >Enter the room</button>
             </form>
         </GuestLayout>
