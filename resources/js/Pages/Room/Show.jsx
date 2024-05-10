@@ -4,6 +4,7 @@ import GuestLayout from '@/Layouts/GuestLayout'
 import Swipe from '@/Components/Movies/Swipe'
 import apiClient from '@/api'
 import Cookies from 'js-cookie'
+import { toast } from 'react-toastify'
 
 export default function ShowRoom({ room }) {
     const [movies, setMovies] = useState()
@@ -43,6 +44,12 @@ export default function ShowRoom({ room }) {
 
     const middleman = async (page) => {
         let movies = await fetchMovies(page)
+
+        if (!movies) {
+            toast.error('An error occurred when searching for movies')
+
+            return
+        }
 
         const { page: lastPageLoaded, movieId: lastSwipedMovieId } = getLastSwipedMovie()
         const isBeingResumed = page === lastPageLoaded
@@ -87,9 +94,13 @@ export default function ShowRoom({ room }) {
     }
 
     const fetchMovies = async (page) => {
-        const result = await apiClient.get(`/api/movie?page=${page}`)
+        try {
+            const response = await apiClient.get(`/api/movie?page=${page}`)
 
-        return result.status === 200 ? result.data.results : []
+            return response.data.results
+        } catch (error) {
+            return false
+        }
     }
 
     const saveLastSwipedMovie = (movieId, page) => {
@@ -105,19 +116,32 @@ export default function ShowRoom({ room }) {
         window.Echo.leaveChannel(channelName)
     }
 
-    const handleSwipe = (direction) => {
+    const handleSwipe = async(direction) => {
         const movieId = movies.at(-1).id
-        sendSwipedMovie(movieId, direction)
+        const sent = await sendSwipedMovie(movieId, direction)
+
+        if (!sent) {
+            toast.error('Failed to register movie swipe')
+
+            return
+        }
+
         saveLastSwipedMovie(movieId, currentPage)
         setMovies(movies.slice(0, -1))
     }
 
-    const sendSwipedMovie = (movieId, direction) => {
-        apiClient.post('/api/movie/swipe', {
-            direction,
-            movie_id: movieId,
-            room_id: room.id,
-        })
+    const sendSwipedMovie = async (movieId, direction) => {
+        try {
+            await apiClient.post('/api/movie/swipe', {
+                direction,
+                movie_id: movieId,
+                room_id: room.id,
+            })
+
+            return true
+        } catch (error) {
+            return false
+        }
     }
 
     const clearRoomData = () => {

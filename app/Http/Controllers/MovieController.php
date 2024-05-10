@@ -22,6 +22,8 @@ class MovieController extends Controller
 
     public function index(IndexMovieRequest $request)
     {
+        // throw new \Exception();
+
         $page = $request->validated()['page'];
 
         $movies = $this->movieService->getMovies($page, 'popular');
@@ -31,6 +33,8 @@ class MovieController extends Controller
 
     public function swipe(StoreMovieRequest $request)
     {
+        // throw new \Exception();
+
         $validatedRequest = $request->validated();
 
         $room = $this->roomRepository->findById($validatedRequest['room_id']);

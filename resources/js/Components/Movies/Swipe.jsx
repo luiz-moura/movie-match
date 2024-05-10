@@ -54,9 +54,13 @@ export default function Swipe({ movies, match, handleSwipe }) {
     useEffect(() => {
         if (!draggedOut) return
 
-        handleSwipe(draggedOut)
-        setDraggedOut(false)
+        middleman()
     }, [draggedOut])
+
+    const middleman = async () => {
+        await handleSwipe(draggedOut)
+        setDraggedOut(false)
+    }
 
     return (
         <motion.div className={`w-full flex p-5 flex-col justify-center items-center ${isDragging ? 'cursor-grabbing' : ''}`}>
