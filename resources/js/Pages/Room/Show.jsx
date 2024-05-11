@@ -5,11 +5,13 @@ import Swipe from '@/Components/Movies/Swipe'
 import apiClient from '@/api'
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify'
+import Match from '@/Components/Movies/Match'
 
 export default function ShowRoom({ room }) {
     const [movies, setMovies] = useState()
     const [match, setMatch] = useState(room.match)
     const [currentPage, setCurrentPage] = useState()
+    const [isBlocked, setIsBlocked] = useState(false)
 
     const channelName = `swipe.${room.key}`
     const eventToListen = 'SwipeMovie'
@@ -117,28 +119,33 @@ export default function ShowRoom({ room }) {
     }
 
     const handleSwipe = async(direction) => {
-        const movieId = movies.at(-1).id
-        const sent = await sendSwipedMovie(movieId, direction)
+        setIsBlocked(true)
 
-        if (!sent) {
+        const movieId = movies.at(-1).id
+        const response = await sendSwipedMovie(movieId, direction)
+
+        if (!response) {
             toast.error('Failed to register movie swipe')
 
             return
         }
 
+        if (204 === response.status) return
+
         saveLastSwipedMovie(movieId, currentPage)
         setMovies(movies.slice(0, -1))
+        setIsBlocked(false)
     }
 
     const sendSwipedMovie = async (movieId, direction) => {
         try {
-            await apiClient.post('/api/movie/swipe', {
+            const response = await apiClient.post('/api/movie/swipe', {
                 direction,
                 movie_id: movieId,
                 room_id: room.id,
             })
 
-            return true
+            return response
         } catch (error) {
             return false
         }
@@ -151,11 +158,16 @@ export default function ShowRoom({ room }) {
     return (
         <GuestLayout>
             <Head title='Room' />
-            <Swipe
-                movies={movies}
-                match={match}
-                handleSwipe={handleSwipe}
-            />
+            {match && (
+                <Match movie={match} />
+            )}
+            {!match && (
+                <Swipe
+                    movies={movies}
+                    isBlocked={isBlocked}
+                    handleSwipe={handleSwipe}
+                />
+            )}
         </GuestLayout>
     )
 }
