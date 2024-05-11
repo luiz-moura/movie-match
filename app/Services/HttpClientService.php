@@ -60,7 +60,6 @@ class HttpClientService
         try {
             $response = $this->client()->request('GET', $uri);
         } catch (NetworkExceptionInterface|ClientExceptionInterface|RequestExceptionInterface $e) {
-            var_dump($e->getMessage());
             throw new HttpException(message: 'Failure to integrate with third parties.', previous: $e);
         }
 
