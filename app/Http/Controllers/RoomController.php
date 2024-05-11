@@ -7,7 +7,6 @@ use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
 use App\Services\MovieService;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RoomController extends Controller
@@ -18,7 +17,7 @@ class RoomController extends Controller
 
     public function create()
     {
-        return Inertia::render('Room/Create');
+        return inertia('Room/Create');
     }
 
     public function store()
@@ -48,12 +47,13 @@ class RoomController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $match = false;
         if ($room['finished_at']) {
             $match = $roomMovieRepository->queryByMatchByRoomId($room['id']);
+        }
 
-            if ($match) {
-                $room['match'] = $movieService->findById($match['movie_id']);
-            }
+        if ($match) {
+            $room['match'] = $movieService->findById($match['movie_id']);
         }
 
         return inertia('Room/Show', compact('room'));
