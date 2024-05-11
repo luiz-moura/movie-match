@@ -42,23 +42,25 @@ class MovieController extends Controller
             return response()->noContent();
         }
 
+        $match = false;
         if ('right' === $validatedRequest['direction']) {
             $match = $this->roomMovieRepository->checksMachByRoomIdAndMovieId($room['id'], $validatedRequest['movie_id']);
-            if ($match) {
-                $movie = $this->movieService->findById($validatedRequest['movie_id']);
-                SwipeMovie::dispatch($room['key'], $movie);
-                $this->roomRepository->finishRoomById($room['id']);
-            }
+        }
+
+        if ($match) {
+            $movie = $this->movieService->findById($validatedRequest['movie_id']);
+            SwipeMovie::dispatch($room['key'], $movie);
+            $this->roomRepository->finishRoomById($room['id']);
         }
 
         $this->roomMovieRepository->create([
             'room_id' => $room['id'],
             'movie_id' => $validatedRequest['movie_id'],
             'direction' => $validatedRequest['direction'],
-            'match' => $match ?? false,
+            'match' => $match,
         ]);
 
-        if (isset($match) && $match) {
+        if ($match) {
             return response()->noContent();
         }
     }
