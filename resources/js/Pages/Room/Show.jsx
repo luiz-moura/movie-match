@@ -6,12 +6,14 @@ import apiClient from '@/api'
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify'
 import Match from '@/Components/Movies/Match'
+import CardSkeleton from '@/Components/Movies/CardSkeleton'
 
 export default function ShowRoom({ room }) {
     const [movies, setMovies] = useState()
     const [match, setMatch] = useState(room.match)
     const [currentPage, setCurrentPage] = useState()
-    const [isBlocked, setIsBlocked] = useState(false)
+    const [isBlocked, setIsBlocked] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
 
     const channelName = `swipe.${room.key}`
     const eventToListen = 'SwipeMovie'
@@ -45,6 +47,8 @@ export default function ShowRoom({ room }) {
     }, [match])
 
     const middleman = async (page) => {
+        setIsLoading(true)
+
         let movies = await fetchMovies(page)
 
         if (!movies) {
@@ -60,6 +64,8 @@ export default function ShowRoom({ room }) {
         }
 
         setMovies(movies)
+        setIsLoading(false)
+        setIsBlocked(false)
 
         if (isBeingResumed) return
 
@@ -158,16 +164,12 @@ export default function ShowRoom({ room }) {
     return (
         <GuestLayout>
             <Head title='Room' />
-            {match && (
-                <Match movie={match} />
-            )}
-            {!match && (
-                <Swipe
-                    movies={movies}
-                    isBlocked={isBlocked}
-                    handleSwipe={handleSwipe}
-                />
-            )}
+            {match
+                ? <Match movie={match} />
+                : isLoading
+                    ? <CardSkeleton/>
+                    : <Swipe movies={movies} isBlocked={isBlocked} handleSwipe={handleSwipe}/>
+            }
         </GuestLayout>
     )
 }

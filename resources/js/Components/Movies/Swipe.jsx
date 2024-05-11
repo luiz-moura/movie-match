@@ -62,7 +62,7 @@ export default function Swipe({ movies, isBlocked, handleSwipe }) {
     }
 
     return (
-        <motion.div className={`w-full flex p-5 flex-col justify-center items-center ${isDragging ? 'cursor-grabbing' : ''} ${isBlocked ? 'pointer-events-none opacity-50' : ''}`}>
+        <motion.div className={`w-full flex flex-col justify-center items-center ${isDragging ? 'cursor-grabbing' : ''} ${isBlocked ? 'pointer-events-none opacity-50' : ''}`}>
             <div className='w-full aspect-[100/150] max-w-xs relative z-10'>
                 <AnimatePresence>
                     {!!movies && movies.map((movie, i) => {
