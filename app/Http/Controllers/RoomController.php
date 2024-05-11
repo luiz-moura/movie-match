@@ -35,7 +35,7 @@ class RoomController extends Controller
             throw new NotFoundHttpException();
         }
 
-        return Inertia::render('Room/Share', compact('room'));
+        return inertia('Room/Share', compact('room'));
     }
 
     public function show(
@@ -56,6 +56,6 @@ class RoomController extends Controller
             }
         }
 
-        return Inertia::render('Room/Show', compact('room'));
+        return inertia('Room/Show', compact('room'));
     }
 }
