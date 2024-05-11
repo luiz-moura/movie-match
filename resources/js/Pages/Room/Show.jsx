@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Head } from '@inertiajs/react'
-import GuestLayout from '@/Layouts/GuestLayout'
 import Swipe from '@/Components/Movies/Swipe'
 import apiClient from '@/api'
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify'
 import Match from '@/Components/Movies/Match'
 import CardSkeleton from '@/Components/Movies/CardSkeleton'
+import RoomLayout from '@/Layouts/RoomLayout'
 
 export default function ShowRoom({ room }) {
     const [movies, setMovies] = useState()
@@ -162,7 +162,7 @@ export default function ShowRoom({ room }) {
     }
 
     return (
-        <GuestLayout>
+        <RoomLayout>
             <Head title='Room' />
             {match
                 ? <Match movie={match} />
@@ -170,6 +170,6 @@ export default function ShowRoom({ room }) {
                     ? <CardSkeleton/>
                     : <Swipe movies={movies} isBlocked={isBlocked} handleSwipe={handleSwipe}/>
             }
-        </GuestLayout>
+        </RoomLayout>
     )
 }

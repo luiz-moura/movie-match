@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/react'
 import { useState } from 'react'
 import { FiKey } from 'react-icons/fi'
 import { FaHeart } from 'react-icons/fa'
-import GuestLayout from '@/Layouts/GuestLayout'
+import RoomLayout from '@/Layouts/RoomLayout'
 
 export default function CreateRoom() {
     const { post, processing } = useForm()
@@ -24,7 +24,7 @@ export default function CreateRoom() {
     }
 
     return (
-        <GuestLayout>
+        <RoomLayout>
             <p className='inline-flex items-center py-1 px-1 pe-4 mb-7 text-sm text-blue-700 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 w-full'>
                 <span className='text-xs text-white px-4 py-1.5'>
                     <FaHeart color='red' className='text-lg'/>
@@ -60,6 +60,6 @@ export default function CreateRoom() {
                     >Enter</button>
                 </div>
             </form>
-        </GuestLayout>
+        </RoomLayout>
     )
 }
