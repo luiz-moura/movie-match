@@ -95,7 +95,7 @@ export default function ShowRoom({ room }) {
     }
 
     const listenToEvents = () => {
-        window.Echo.channel(channelName).listen(
+        Echo.channel(channelName).listen(
             eventToListen,
             ({ movie }) => handleMatch(movie)
         )
@@ -121,7 +121,7 @@ export default function ShowRoom({ room }) {
     }
 
     const stopListeningToEvents = () => {
-        window.Echo.leaveChannel(channelName)
+        Echo.leaveChannel(channelName)
     }
 
     const handleSwipe = async(direction) => {
