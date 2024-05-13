@@ -12,7 +12,7 @@ export default function ShowRoom({ room }) {
     const [movies, setMovies] = useState()
     const [match, setMatch] = useState(room.match)
     const [currentPage, setCurrentPage] = useState()
-    const [isBlocked, setIsBlocked] = useState(true)
+    const [isBlocked, setIsBlocked] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
     const channelName = `swipe.${room.key}`
@@ -65,7 +65,6 @@ export default function ShowRoom({ room }) {
 
         setMovies(movies)
         setIsLoading(false)
-        setIsBlocked(false)
 
         if (isBeingResumed) return
 
@@ -125,8 +124,6 @@ export default function ShowRoom({ room }) {
     }
 
     const handleSwipe = async(direction) => {
-        setIsBlocked(true)
-
         const movieId = movies.at(-1).id
         const response = await sendSwipedMovie(movieId, direction)
 
@@ -136,11 +133,14 @@ export default function ShowRoom({ room }) {
             return
         }
 
-        if (204 === response.status) return
+        if (204 === response.status) {
+            setIsBlocked(true)
+
+            return
+        }
 
         saveLastSwipedMovie(movieId, currentPage)
         setMovies(movies.slice(0, -1))
-        setIsBlocked(false)
     }
 
     const sendSwipedMovie = async (movieId, direction) => {
