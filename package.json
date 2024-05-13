@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "@inertiajs/react": "^1.0.16",
+        "@vitejs/plugin-basic-ssl": "^1.1.0",
         "flowbite": "^2.3.0",
         "flowbite-react": "^0.9.0",
         "framer": "^2.4.1",
