@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Head } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import Swipe from '@/Components/Movies/Swipe'
 import apiClient from '@/api'
 import Cookies from 'js-cookie'
@@ -23,6 +23,7 @@ export default function ShowRoom({ room }) {
         if (room.finished_at) return
 
         listenToEvents()
+        handleTabs()
 
         const { page } = getLastSwipedMovie()
         setCurrentPage(page)
@@ -45,6 +46,21 @@ export default function ShowRoom({ room }) {
 
         clearRoomData()
     }, [match])
+
+    const handleTabs = () => {
+        const channel = new BroadcastChannel(`pageChannel_${room.key}`)
+
+        channel.postMessage('newTab')
+        channel.onmessage = (event) => openInAnotherTab()
+
+        return () => {
+            channel.close()
+        }
+    }
+
+    const openInAnotherTab = () => {
+        router.get(`/tab-locked`)
+    }
 
     const middleman = async (page) => {
         setIsLoading(true)

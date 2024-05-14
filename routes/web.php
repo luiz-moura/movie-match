@@ -14,6 +14,8 @@ Route::controller(RoomController::class)->prefix('room')->group(function () {
     Route::get('/{key}/share', 'share')->name('room.share');
 });
 
+Route::get('/tab-locked', fn () => inertia('TabLocked'))->name('tab-locked');
+
 // Route::middleware('auth')
 //     ->controller(ProfileController::class)
 //     ->prefix('profile')
