@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
-use App\Services\MovieService;
+use App\Services\MovieApiService;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -40,7 +40,7 @@ class RoomController extends Controller
     public function show(
         string $key,
         RoomMovieRepository $roomMovieRepository,
-        MovieService $movieService,
+        MovieApiService $movieApiService,
     ) {
         $room =  $this->roomRepository->findByKey($key);
         if (!$room) {
@@ -53,7 +53,7 @@ class RoomController extends Controller
         }
 
         if ($match) {
-            $room['match'] = $movieService->findById($match['movie_id']);
+            $room['match'] = $movieApiService->findById($match['movie_id']);
         }
 
         return inertia('Room/Show', compact('room'));

@@ -8,7 +8,7 @@ use App\Http\Requests\IndexMovieRequest;
 use App\Http\Requests\StoreMovieRequest;
 use App\Repositories\RoomMovieRepository;
 use App\Repositories\RoomRepository;
-use App\Services\MovieService;
+use App\Services\MovieApiService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MovieController extends Controller
@@ -16,7 +16,7 @@ class MovieController extends Controller
     public function __construct(
         private RoomRepository $roomRepository,
         private RoomMovieRepository $roomMovieRepository,
-        private MovieService $movieService,
+        private MovieApiService $movieApiService,
     ) {
     }
 
@@ -24,7 +24,7 @@ class MovieController extends Controller
     {
         $page = $request->validated()['page'];
 
-        $movies = $this->movieService->getMovies($page, 'popular');
+        $movies = $this->movieApiService->getMovies($page, 'popular');
 
         return response()->json($movies);
     }
@@ -48,7 +48,7 @@ class MovieController extends Controller
         }
 
         if ($match) {
-            $movie = $this->movieService->findById($validatedRequest['movie_id']);
+            $movie = $this->movieApiService->findById($validatedRequest['movie_id']);
             SwipeMovie::dispatch($room['key'], $movie);
             $this->roomRepository->finishRoomById($room['id']);
         }

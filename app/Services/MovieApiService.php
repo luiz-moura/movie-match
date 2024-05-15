@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-class MovieService
+class MovieApiService
 {
     public function __construct(
         private HttpClientService $httpClientService
